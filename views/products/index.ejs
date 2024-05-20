@@ -6,7 +6,10 @@
     <title>Products</title>
 </head>
 <body>
-    <h1>All products</h1>
+    <h1><%= category %> products</h1>
+    <% if (category !== 'All') { %>
+        <a href="/products">All products</a>
+    <% } %>
     <ul>
         <% for (let product of products) { %>
             <li>

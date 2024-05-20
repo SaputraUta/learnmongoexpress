@@ -18,11 +18,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-app.get('/', async (req, res) => {
-    const products = await Product.find({});
-    res.render('products/index', {
-        products
-    });
+app.get('/products', async (req, res) => {
+    const { category } = req.query;
+    if (category) {
+        const products = await Product.find({ category });
+        res.render('products/index', {
+            products, category
+        });
+    } else {
+        const products = await Product.find({});
+        res.render('products/index', {
+            products, category: 'All'
+        });
+    }
 });
 
 app.get('/product/create', (req, res) => {
@@ -41,6 +49,12 @@ app.get('/product/:id/edit/', async (req, res) => {
     res.render('products/edit', {
         product
     })
+})
+
+app.delete('/product/:id', async (req, res) => {
+    const id = req.params.id;
+    await Product.findByIdAndDelete(id);
+    res.redirect('/products');
 })
 
 app.put('/product/:id', async (req, res) => {
