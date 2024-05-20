@@ -13,37 +13,37 @@ const products = [
       "brand": "ClothCo",
       "price": 120000,
       "color": "White",
-      "size": "M"
+      "category": "Baju"
     },
     {
-      "name": "Denim Jacket",
+      "name": "Denim Jeans",
       "brand": "DenimWorks",
       "price": 350000,
       "color": "Blue",
-      "size": "L"
+      "category": "Celana"
     },
     {
-      "name": "Running Shoes",
-      "brand": "Sporty",
-      "price": 500000,
+      "name": "Baseball Cap",
+      "brand": "Hatify",
+      "price": 75000,
       "color": "Black",
-      "size": "XL"
+      "category": "Topi"
     },
     {
-      "name": "Casual Shirt",
-      "brand": "StylishWear",
-      "price": 200000,
-      "color": "Grey",
-      "size": "S"
+      "name": "Leather Belt",
+      "brand": "AccessoriesHub",
+      "price": 90000,
+      "color": "Brown",
+      "category": "Aksesoris"
     },
     {
-      "name": "Hoodie",
+      "name": "Hooded Jacket",
       "brand": "ComfortCloth",
       "price": 250000,
       "color": "Red",
-      "size": "XXL"
+      "category": "Jaket"
     }
-  ]
+  ]  
   
 Product.insertMany(products).then((result) => {
     console.log(result);
