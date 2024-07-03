@@ -49,7 +49,7 @@ app.get(
   "/garments/:id",
   wrapAsync(async (req, res) => {
     const id = req.params.id;
-    const garment = await Garment.findById(id);
+    const garment = await Garment.findById(id).populate("products");
     res.render("garments/show", { garment });
   })
 );
@@ -64,20 +64,24 @@ app.post(
 );
 
 app.get("/garments/:garment_id/products/create", (req, res) => {
-    const { garment_id } = req.params;
-    res.render("products/create", {garment_id});
-})
+  const { garment_id } = req.params;
+  res.render("products/create", { garment_id });
+});
 
-app.post("/garments/:garment_id/products", wrapAsync(async (req,res)=> {
-  const {garment_id} = req.params;
-  const product = new Product(req.body);
-  const garment = await Garment.findById(garment_id);
-  garment.products.push(product);
-  await garment.save();
-  await product.save();
-  console.log(garment);
-  res.redirect(`/garments/${garment._id}`);
-}))
+app.post(
+  "/garments/:garment_id/products",
+  wrapAsync(async (req, res) => {
+    const { garment_id } = req.params;
+    const product = new Product(req.body);
+    const garment = await Garment.findById(garment_id);
+    garment.products.push(product);
+    product.garment = garment;
+    await garment.save();
+    await product.save();
+    console.log(garment);
+    res.redirect(`/garments/${garment._id}`);
+  })
+);
 
 app.get(
   "/products",
@@ -147,7 +151,7 @@ app.get(
   "/product/:id",
   wrapAsync(async (req, res) => {
     const id = req.params.id;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate("garment");
     res.render("products/show", {
       product,
     });
