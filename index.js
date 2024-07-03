@@ -83,6 +83,15 @@ app.post(
   })
 );
 
+app.delete(
+  "/garments/:id",
+  wrapAsync(async (req, res) => {
+    const { garment_id } = req.params;
+    const garment = await Garment.findOneAndDelete({ id: garment_id });
+    res.redirect("/garments");
+  })
+);
+
 app.get(
   "/products",
   wrapAsync(async (req, res) => {
