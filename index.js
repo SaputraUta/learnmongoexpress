@@ -30,8 +30,8 @@ function wrapAsync(fn) {
 }
 
 app.get("/", (req, res) => {
-    res.send("Hello world");
-})
+  res.send("Hello world");
+});
 
 app.get(
   "/garments",
@@ -45,6 +45,15 @@ app.get("/garments/create", (req, res) => {
   res.render("garments/create");
 });
 
+app.get(
+  "/garments/:id",
+  wrapAsync(async (req, res) => {
+    const id = req.params.id;
+    const garment = await Garment.findById(id);
+    res.render("garments/show", { garment });
+  })
+);
+
 app.post(
   "/garments",
   wrapAsync(async (req, res) => {
@@ -53,6 +62,22 @@ app.post(
     res.redirect("/garments");
   })
 );
+
+app.get("/garments/:garment_id/products/create", (req, res) => {
+    const { garment_id } = req.params;
+    res.render("products/create", {garment_id});
+})
+
+app.post("/garments/:garment_id/products", wrapAsync(async (req,res)=> {
+  const {garment_id} = req.params;
+  const product = new Product(req.body);
+  const garment = await Garment.findById(garment_id);
+  garment.products.push(product);
+  await garment.save();
+  await product.save();
+  console.log(garment);
+  res.redirect(`/garments/${garment._id}`);
+}))
 
 app.get(
   "/products",
