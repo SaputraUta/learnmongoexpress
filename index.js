@@ -5,6 +5,8 @@ const methodOverride = require("method-override");
 const mongoose = require("mongoose");
 const port = 3000;
 const ErrorHandler = require("./ErrorHandler");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const Product = require("./models/product");
 const Garment = require("./models/garment");
@@ -17,6 +19,21 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(flash());
+
+app.use((req, res, next)=>{
+  res.locals.flash_messages = req.flash('flash_messages');
+  next();
+})
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -59,6 +76,7 @@ app.post(
   wrapAsync(async (req, res) => {
     const garment = new Garment(req.body);
     garment.save();
+    req.flash("flash_messages", "Garment created");
     res.redirect("/garments");
   })
 );
